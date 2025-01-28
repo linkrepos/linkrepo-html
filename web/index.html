@@ -1,0 +1,61 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Link Collections</title>
+    <style>
+        .collection {
+            margin: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+        }
+        .link-item {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="collections"></div>
+
+    <script>
+        async function fetchLinks() {
+            // Replace with your GitHub raw content URL
+            const url = 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/links.json';
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                renderCollections(data);
+            } catch (error) {
+                console.error('Error fetching links:', error);
+            }
+        }
+
+        function renderCollections(data) {
+            const container = document.getElementById('collections');
+            
+            data.collections.forEach(collection => {
+                const collectionDiv = document.createElement('div');
+                collectionDiv.className = 'collection';
+                
+                collectionDiv.innerHTML = `
+                    <h2>${collection.name}</h2>
+                    <p>${collection.description}</p>
+                    ${collection.links.map(link => `
+                        <div class="link-item">
+                            <a href="${link.url}" target="_blank">${link.title}</a>
+                            <p>${link.description}</p>
+                            <small>${link.tags.join(', ')}</small>
+                        </div>
+                    `).join('')}
+                `;
+                
+                container.appendChild(collectionDiv);
+            });
+        }
+
+        // Load data when page loads
+        fetchLinks();
+    </script>
+</body>
+</html>
